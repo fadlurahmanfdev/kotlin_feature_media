@@ -10,6 +10,7 @@ interface MediaRepository {
         onCompleteCheckPermission: (isImageGranted: Boolean, isVideoGranted: Boolean) -> Unit,
     )
 
+    fun getAlbums(context: Context): List<MediaAlbumModel>
     fun getPhotoAlbums(context: Context): List<MediaAlbumModel>
 
     fun getVideoAlbums(context: Context): List<MediaAlbumModel>

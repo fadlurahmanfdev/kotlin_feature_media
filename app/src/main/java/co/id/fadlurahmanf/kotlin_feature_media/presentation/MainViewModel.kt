@@ -9,6 +9,10 @@ import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
 class MainViewModel(
     private val exampleMediaUseCase: ExampleMediaUseCase
 ) : ViewModel() {
+    fun getAlbums(context: Context): List<MediaAlbumModel> {
+        return exampleMediaUseCase.getAlbums(context)
+    }
+
     fun getPhotoAlbums(context: Context): List<MediaAlbumModel> {
         return exampleMediaUseCase.getPhotoAlbums(context)
     }

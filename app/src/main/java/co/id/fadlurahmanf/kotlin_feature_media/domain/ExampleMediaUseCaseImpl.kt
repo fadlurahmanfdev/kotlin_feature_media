@@ -8,6 +8,10 @@ import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaRe
 class ExampleMediaUseCaseImpl(
     private val mediaRepository: MediaRepository
 ) : ExampleMediaUseCase {
+    override fun getAlbums(context: Context): List<MediaAlbumModel> {
+        return mediaRepository.getAlbums(context)
+    }
+
     override fun getPhotoAlbums(context: Context): List<MediaAlbumModel> {
         return mediaRepository.getPhotoAlbums(context)
     }

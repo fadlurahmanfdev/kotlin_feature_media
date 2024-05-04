@@ -19,6 +19,12 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private val features: List<FeatureModel> = listOf<FeatureModel>(
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Get List Album",
+            desc = "Get list of all album",
+            enum = "GET_ALBUMS"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
             title = "Get List Image Album",
             desc = "Get list of all image album",
             enum = "GET_IMAGE_ALBUMS"
@@ -76,6 +82,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 
     override fun onClicked(item: FeatureModel) {
         when (item.enum) {
+            "GET_ALBUMS" -> {
+                val intent = Intent(this, ListAlbumActivity::class.java)
+                startActivity(intent)
+            }
             "GET_IMAGE_ALBUMS" -> {
                 val intent = Intent(this, ListImageAlbumActivity::class.java)
                 startActivity(intent)

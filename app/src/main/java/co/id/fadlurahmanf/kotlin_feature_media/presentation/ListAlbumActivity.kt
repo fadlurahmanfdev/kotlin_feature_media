@@ -46,17 +46,17 @@ class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val fetchedAlbums = viewModel.getPhotoAlbums(this)
+        val fetchedAlbums = viewModel.getAlbums(this)
         albums.clear()
         albums.addAll(fetchedAlbums)
         adapter.setAlbums(albums)
     }
 
     override fun onClicked(album: MediaAlbumModel) {
-        val intent = Intent(this, ListVideoActivity::class.java)
-        intent.apply {
-            putExtra("ALBUM_ID", album.id)
-        }
-        startActivity(intent)
+//        val intent = Intent(this, ListVideoActivity::class.java)
+//        intent.apply {
+//            putExtra("ALBUM_ID", album.id)
+//        }
+//        startActivity(intent)
     }
 }

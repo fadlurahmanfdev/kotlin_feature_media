@@ -48,16 +48,6 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
                 }
             }
         }
-
-        fun setItemView(album: MediaAlbumModel) {
-            Glide.with(thumbnail).load(Uri.fromFile(File(album.thumbnailPath))).into(thumbnail)
-            albumName.text = album.name
-            albumItemCount.text = "${album.itemCount}"
-
-            if (album.thumbnailPathType == MediaItemType.VIDEO) {
-                videoIcon.visibility = View.VISIBLE
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,7 +60,17 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val album = albums[position]
 
-        holder.setItemView(album)
+        Glide.with(holder.thumbnail).load(Uri.fromFile(File(album.thumbnailPath))).into(holder.thumbnail)
+        holder.albumName.text = album.name
+        holder.albumItemCount.text = "${album.itemCount}"
+
+        if (album.thumbnailPathType == MediaItemType.VIDEO) {
+            holder.videoIcon.visibility = View.VISIBLE
+        }else{
+            holder.videoIcon.visibility = View.GONE
+        }
+
+
     }
 
     interface Callback {

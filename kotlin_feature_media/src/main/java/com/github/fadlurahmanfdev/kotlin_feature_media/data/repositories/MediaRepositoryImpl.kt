@@ -11,6 +11,7 @@ import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
 import com.github.fadlurahmanfdev.kotlin_feature_media.other.BaseMedia
+import java.util.Calendar
 
 class MediaRepositoryImpl : BaseMedia(), MediaRepository {
     override fun checkPermission(
@@ -39,6 +40,55 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
                 status == PackageManager.PERMISSION_GRANTED,
                 status == PackageManager.PERMISSION_GRANTED,
             )
+        }
+    }
+
+    override fun getAlbums(context: Context): List<MediaAlbumModel> {
+        try {
+            val albums = arrayListOf<MediaAlbumModel>()
+            val photoAlbums = getPhotoAlbums(context)
+            val videoAlbums = getVideoAlbums(context)
+
+            albums.addAll(photoAlbums)
+            repeat(videoAlbums.size) { indexVideoAlbum ->
+                if (albums.map { albumItem -> albumItem.id }.toList()
+                        .contains(videoAlbums[indexVideoAlbum].id)
+                ) {
+                    val similarAlbum =
+                        albums.first { albumItem -> albumItem.id == videoAlbums[indexVideoAlbum].id }
+                    val oldIndex =
+                        albums.indexOfFirst { albumItem -> albumItem.id == videoAlbums[indexVideoAlbum].id }
+                    val oldItemCount = similarAlbum.itemCount
+                    val newItemCount = videoAlbums[indexVideoAlbum].itemCount
+                    val photoDate = Calendar.getInstance().apply {
+                        timeInMillis = similarAlbum.thumbnailPathDateAdded
+                    }
+                    val videoDate = Calendar.getInstance().apply {
+                        timeInMillis = videoAlbums[indexVideoAlbum].thumbnailPathDateAdded
+                    }
+
+                    albums[oldIndex] = similarAlbum.copy(
+                        itemCount = oldItemCount + newItemCount,
+                    )
+
+                    if (videoDate.after(photoDate)) {
+                        albums[oldIndex] = similarAlbum.copy(
+                            thumbnailPath = videoAlbums[indexVideoAlbum].thumbnailPath,
+                            thumbnailPathDateAdded = videoAlbums[indexVideoAlbum].thumbnailPathDateAdded,
+                            thumbnailPathType = MediaItemType.VIDEO
+                        )
+                    }
+                } else {
+                    albums.add(videoAlbums[indexVideoAlbum])
+                }
+            }
+            return albums.sortedWith(compareByDescending<MediaAlbumModel> {
+                it.thumbnailPathDateAdded
+            }.thenByDescending {
+                it.thumbnailPathDateAdded
+            })
+        } catch (e: Throwable) {
+            return listOf()
         }
     }
 

@@ -5,6 +5,7 @@ import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumMode
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
 
 interface ExampleMediaUseCase {
+    fun getAlbums(context: Context): List<MediaAlbumModel>
     fun getPhotoAlbums(context: Context): List<MediaAlbumModel>
     fun getVideoAlbums(context: Context): List<MediaAlbumModel>
     fun getPhotos(context: Context, albumId: Long?): List<MediaItemModel>
