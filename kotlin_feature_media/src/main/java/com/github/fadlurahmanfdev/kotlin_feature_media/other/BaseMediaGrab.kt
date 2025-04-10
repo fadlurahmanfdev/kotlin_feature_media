@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 
-abstract class BaseMedia {
+abstract class BaseMediaGrab {
     fun getPhotoCursor(context: Context): Cursor? {
         val projections = arrayOf(
             MediaStore.Images.Media._ID,

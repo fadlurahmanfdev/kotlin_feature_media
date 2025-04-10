@@ -12,7 +12,7 @@ import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.AlbumAdapter
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaRepositoryImpl
+import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
 
 class ListImageAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
     lateinit var viewModel: MainViewModel
@@ -36,7 +36,7 @@ class ListImageAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaRepositoryImpl()
+                mediaRepository = MediaGrabRepositoryImpl()
             )
         )
 

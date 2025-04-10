@@ -11,7 +11,7 @@ import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.GridMediaAdapter
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaRepositoryImpl
+import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
 
 class ListVideoActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel
@@ -35,7 +35,7 @@ class ListVideoActivity : AppCompatActivity() {
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaRepositoryImpl()
+                mediaRepository = MediaGrabRepositoryImpl()
             )
         )
 

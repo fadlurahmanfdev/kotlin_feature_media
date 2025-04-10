@@ -10,10 +10,10 @@ import androidx.core.content.ContextCompat
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.other.BaseMedia
+import com.github.fadlurahmanfdev.kotlin_feature_media.other.BaseMediaGrab
 import java.util.Calendar
 
-class MediaRepositoryImpl : BaseMedia(), MediaRepository {
+class MediaGrabRepositoryImpl : BaseMediaGrab(), MediaRepository {
     override fun checkPermission(
         context: Context,
         onCompleteCheckPermission: (isImageGranted: Boolean, isVideoGranted: Boolean) -> Unit,
@@ -97,7 +97,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             val cursor: Cursor? = getPhotoCursor(context)
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getAllPhotos: cursor is null"
                 )
                 return listOf()
@@ -143,7 +143,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             cursor.close()
             return albums
         } catch (e: Throwable) {
-            Log.d(MediaRepositoryImpl::class.java.simpleName, "failed getPhotos: ${e.message}")
+            Log.d(MediaGrabRepositoryImpl::class.java.simpleName, "failed getPhotos: ${e.message}")
             return listOf()
         }
     }
@@ -153,7 +153,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             val cursor: Cursor? = getVideoCursor(context)
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getVideoAlbums: cursor is null"
                 )
                 return listOf()
@@ -199,7 +199,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             cursor.close()
             return albums
         } catch (e: Throwable) {
-            Log.d(MediaRepositoryImpl::class.java.simpleName, "failed getVideoAlbums: ${e.message}")
+            Log.d(MediaGrabRepositoryImpl::class.java.simpleName, "failed getVideoAlbums: ${e.message}")
             return listOf()
         }
     }
@@ -209,7 +209,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             val cursor: Cursor? = getPhotoCursor(context)
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getPhotos: cursor is null"
                 )
                 return listOf()
@@ -244,7 +244,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             cursor.close()
             return images
         } catch (e: Throwable) {
-            Log.d(MediaRepositoryImpl::class.java.simpleName, "failed getPhotos: ${e.message}")
+            Log.d(MediaGrabRepositoryImpl::class.java.simpleName, "failed getPhotos: ${e.message}")
             return listOf()
         }
     }
@@ -258,7 +258,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             )
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getPhotos: cursor is null"
                 )
                 return listOf()
@@ -294,7 +294,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             return images
         } catch (e: Throwable) {
             Log.d(
-                MediaRepositoryImpl::class.java.simpleName,
+                MediaGrabRepositoryImpl::class.java.simpleName,
                 "failed getPhotos, albumId: $albumId -> ${e.message}"
             )
             return listOf()
@@ -306,7 +306,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             val cursor: Cursor? = getVideoCursor(context)
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getVideos: cursor is null"
                 )
                 return listOf()
@@ -341,7 +341,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             cursor.close()
             return videos
         } catch (e: Throwable) {
-            Log.d(MediaRepositoryImpl::class.java.simpleName, "failed getVideos: ${e.message}")
+            Log.d(MediaGrabRepositoryImpl::class.java.simpleName, "failed getVideos: ${e.message}")
             return listOf()
         }
     }
@@ -355,7 +355,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             )
             if (cursor == null) {
                 Log.d(
-                    MediaRepositoryImpl::class.java.simpleName,
+                    MediaGrabRepositoryImpl::class.java.simpleName,
                     "warn getPhotos: cursor is null"
                 )
                 return listOf()
@@ -391,7 +391,7 @@ class MediaRepositoryImpl : BaseMedia(), MediaRepository {
             return videos
         } catch (e: Throwable) {
             Log.d(
-                MediaRepositoryImpl::class.java.simpleName,
+                MediaGrabRepositoryImpl::class.java.simpleName,
                 "failed getVideos, albumId: $albumId -> ${e.message}"
             )
             return listOf()

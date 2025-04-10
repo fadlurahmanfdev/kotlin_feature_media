@@ -1,6 +1,5 @@
 package co.id.fadlurahmanf.kotlin_feature_media.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,7 @@ import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.AlbumAdapter
 import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaRepositoryImpl
+import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
 
 class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
     lateinit var viewModel: MainViewModel
@@ -36,7 +35,7 @@ class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaRepositoryImpl()
+                mediaRepository = MediaGrabRepositoryImpl()
             )
         )
 
