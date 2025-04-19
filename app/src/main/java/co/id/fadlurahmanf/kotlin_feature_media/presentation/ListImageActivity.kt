@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.GridMediaAdapter
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.data.repositories.MediaGrabRepositoryImpl
 
 class ListImageActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel

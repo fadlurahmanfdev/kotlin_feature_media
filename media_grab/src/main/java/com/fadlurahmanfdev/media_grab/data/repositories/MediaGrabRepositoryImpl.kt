@@ -1,4 +1,4 @@
-package com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories
+package com.fadlurahmanfdev.media_grab.data.repositories
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,10 +7,10 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.other.BaseMediaGrab
+import com.fadlurahmanfdev.media_grab.data.enum.MediaItemType
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.other.BaseMediaGrab
 import java.util.Calendar
 
 class MediaGrabRepositoryImpl : BaseMediaGrab(), MediaRepository {

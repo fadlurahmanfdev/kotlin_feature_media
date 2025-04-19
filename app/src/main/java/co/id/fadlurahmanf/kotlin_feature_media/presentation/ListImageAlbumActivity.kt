@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.AlbumAdapter
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.repositories.MediaGrabRepositoryImpl
 
 class ListImageAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
     lateinit var viewModel: MainViewModel

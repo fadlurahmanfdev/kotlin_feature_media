@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import co.id.fadlurahmanf.kotlin_feature_media.R
 import com.bumptech.glide.Glide
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.enum.MediaItemType
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
 import java.io.File
 
 class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {

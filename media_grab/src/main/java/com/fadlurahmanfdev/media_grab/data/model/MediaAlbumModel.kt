@@ -1,6 +1,6 @@
-package com.github.fadlurahmanfdev.kotlin_feature_media.data.model
+package com.fadlurahmanfdev.media_grab.data.model
 
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
+import com.fadlurahmanfdev.media_grab.data.enum.MediaItemType
 
 data class MediaAlbumModel(
     val id: Long,

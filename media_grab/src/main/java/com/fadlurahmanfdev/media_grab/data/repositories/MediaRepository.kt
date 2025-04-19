@@ -1,8 +1,8 @@
-package com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories
+package com.fadlurahmanfdev.media_grab.data.repositories
 
 import android.content.Context
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
 
 interface MediaRepository {
     fun checkPermission(

@@ -1,9 +1,9 @@
 package co.id.fadlurahmanf.kotlin_feature_media.domain
 
 import android.content.Context
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaRepository
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.data.repositories.MediaRepository
 
 class ExampleMediaUseCaseImpl(
     private val mediaRepository: MediaRepository

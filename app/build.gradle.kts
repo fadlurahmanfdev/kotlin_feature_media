@@ -45,8 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project(":kotlin_feature_media"))
+    implementation(project(":media_grab"))
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 }

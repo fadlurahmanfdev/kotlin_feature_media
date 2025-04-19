@@ -9,7 +9,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,14 +21,28 @@ import co.id.fadlurahmanf.kotlin_feature_media.R
 import co.id.fadlurahmanf.kotlin_feature_media.data.FeatureModel
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.ListExampleAdapter
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.repositories.MediaGrabRepositoryImpl
+import com.fadlurahmanfdev.media_grab.MediaGrab
+import com.fadlurahmanfdev.media_grab.data.repositories.MediaGrabRepositoryImpl
 import java.io.File
 
 
 class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     lateinit var viewModel: MainViewModel
+    lateinit var mediaGrab: MediaGrab
 
     private val features: List<FeatureModel> = listOf<FeatureModel>(
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Pick Image Visual Media",
+            desc = "Pick image via pick visual media",
+            enum = "PICK_IMAGE_VISUAL_MEDIA"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "----------------",
+            desc = "----------------------------------------",
+            enum = "DIVIDER-PICK-IMAGE"
+        ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
             title = "Get List Album",
@@ -64,6 +81,13 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         ),
     )
 
+    private var pickImageVisualMediaLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()){ uri ->
+        if (uri != null){
+            val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+            Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% media item: $mediaItem")
+        }
+    }
+
     private lateinit var rv: RecyclerView
 
     private lateinit var adapter: ListExampleAdapter
@@ -78,6 +102,8 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             insets
         }
         rv = findViewById<RecyclerView>(R.id.rv)
+
+        mediaGrab = MediaGrab()
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
@@ -97,6 +123,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 
     override fun onClicked(item: FeatureModel) {
         when (item.enum) {
+            "PICK_IMAGE_VISUAL_MEDIA" -> {
+                pickImageVisualMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+
             "GET_ALBUMS" -> {
                 val intent = Intent(this, ListAlbumActivity::class.java)
                 startActivity(intent)
@@ -122,17 +152,17 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
                 startActivity(intent)
             }
 
-            "START_FILE_EXPLORER" -> {
-                val intent = Intent(
-                    Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                )
-                val uri =
-                    Uri.parse(Environment.getExternalStorageDirectory().path + File.separator);
-                intent.setDataAndType(uri, "image/*")
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                startActivityForResult(Intent.createChooser(intent, null), 900)
-            }
+//            "PICK_IMAGE" -> {
+//                val intent = Intent(
+//                    Intent.ACTION_PICK,
+//                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                )
+//                val uri =
+//                    Uri.parse(Environment.getExternalStorageDirectory().path + File.separator);
+//                intent.setDataAndType(uri, "image/*")
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                startActivityForResult(Intent.createChooser(intent, null), 900)
+//            }
         }
     }
 

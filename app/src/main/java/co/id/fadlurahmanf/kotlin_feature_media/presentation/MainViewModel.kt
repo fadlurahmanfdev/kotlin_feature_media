@@ -3,8 +3,8 @@ package co.id.fadlurahmanf.kotlin_feature_media.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCase
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaAlbumModel
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaAlbumModel
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
 
 class MainViewModel(
     private val exampleMediaUseCase: ExampleMediaUseCase

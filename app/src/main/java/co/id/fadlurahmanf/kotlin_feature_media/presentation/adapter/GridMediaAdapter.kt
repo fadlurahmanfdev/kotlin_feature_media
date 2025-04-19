@@ -8,8 +8,8 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import co.id.fadlurahmanf.kotlin_feature_media.R
 import com.bumptech.glide.Glide
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.enum.MediaItemType
-import com.github.fadlurahmanfdev.kotlin_feature_media.data.model.MediaItemModel
+import com.fadlurahmanfdev.media_grab.data.enum.MediaItemType
+import com.fadlurahmanfdev.media_grab.data.model.MediaItemModel
 import java.io.File
 
 class GridMediaAdapter : RecyclerView.Adapter<GridMediaAdapter.ViewHolder>() {
