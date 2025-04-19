@@ -81,12 +81,16 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         ),
     )
 
-    private var pickImageVisualMediaLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()){ uri ->
-        if (uri != null){
-            val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
-            Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% media item: $mediaItem")
+    private var pickImageVisualMediaLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                Log.d(
+                    this::class.java.simpleName,
+                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                )
+            }
         }
-    }
 
     private lateinit var rv: RecyclerView
 
