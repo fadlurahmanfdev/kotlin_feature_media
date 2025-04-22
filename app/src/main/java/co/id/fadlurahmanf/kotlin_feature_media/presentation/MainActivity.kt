@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.DocumentsContract
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -23,7 +22,6 @@ import co.id.fadlurahmanf.kotlin_feature_media.domain.ExampleMediaUseCaseImpl
 import co.id.fadlurahmanf.kotlin_feature_media.presentation.adapter.ListExampleAdapter
 import com.fadlurahmanfdev.media_grab.MediaGrab
 import com.fadlurahmanfdev.media_grab.data.repositories.MediaGrabRepositoryImpl
-import java.io.File
 
 
 class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
@@ -33,9 +31,27 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private val features: List<FeatureModel> = listOf<FeatureModel>(
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
-            title = "Pick Image Visual Media",
-            desc = "Pick image via pick visual media",
-            enum = "PICK_IMAGE_VISUAL_MEDIA"
+            title = "Single Pick Image Visual Media",
+            desc = "Single Pick image via pick visual media",
+            enum = "SINGLE_PICK_VISUAL_MEDIA"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Multiple Pick Visual Media",
+            desc = "Multiple Pick via pick visual media",
+            enum = "MULTIPLE_PICK_VISUAL_MEDIA"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Single Pick Content",
+            desc = "Single Pick content",
+            enum = "SINGLE_PICK_CONTENT"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Pick Image Via Activity For Result",
+            desc = "Pick image via activity for result",
+            enum = "PICK_IMAGE_ACTIVITY_FOR_RESULT"
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
@@ -45,9 +61,15 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
-            title = "Get List Album",
-            desc = "Get list of all album",
-            enum = "GET_ALBUMS"
+            title = "Get List of Album",
+            desc = "Get list of album",
+            enum = "GET_LIST_OF_ALBUM"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Activity List of Album",
+            desc = "Activity list of album",
+            enum = "ACTIVITY_LIST_OF_ALBUM"
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
@@ -63,9 +85,9 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
-            title = "Grid of all Images",
+            title = "Get list of all images",
             desc = "Get list of all images",
-            enum = "GET_ALL_IMAGE"
+            enum = "GET_ALL_IMAGES"
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
@@ -81,9 +103,9 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         ),
     )
 
-    private var pickImageVisualMediaLauncher =
+    private var singlePickVisualMediaLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
+            uri?.let {
                 val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
                 Log.d(
                     this::class.java.simpleName,
@@ -91,6 +113,48 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
                 )
             }
         }
+
+    private var multiplePickVisualMediaLauncher =
+        registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+            uris?.forEach { uri ->
+                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                Log.d(
+                    this::class.java.simpleName,
+                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                )
+            }
+        }
+
+    private var singlePickContentLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                Log.d(
+                    this::class.java.simpleName,
+                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                )
+            }
+        }
+
+        private var pickMediaActivityForResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val itemCount = result.data?.clipData?.itemCount
+
+                    if (itemCount != null) {
+                        var currentItem = 0
+                        while (currentItem < itemCount) {
+                            val uri = result.data?.clipData?.getItemAt(currentItem)?.uri
+                            val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri!!)
+                            Log.d(
+                                this::class.java.simpleName,
+                                "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                            )
+                            currentItem++
+                        }
+                    }
+                }
+            }
 
     private lateinit var rv: RecyclerView
 
@@ -127,13 +191,55 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 
     override fun onClicked(item: FeatureModel) {
         when (item.enum) {
-            "PICK_IMAGE_VISUAL_MEDIA" -> {
-                pickImageVisualMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            "SINGLE_PICK_IMAGE_VISUAL_MEDIA" -> {
+                singlePickVisualMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
             }
 
-            "GET_ALBUMS" -> {
+            "MULTIPLE_PICK_IMAGE_VISUAL_MEDIA" -> {
+                multiplePickVisualMediaLauncher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                    )
+                )
+
+                // if want to pick image only
+                // multiplePickImageVisualMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                // if want to pick video only
+                // multiplePickImageVisualMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+            }
+
+            "SINGLE_PICK_CONTENT" -> {
+                singlePickContentLauncher.launch("image/*")
+            }
+
+            "PICK_IMAGE_ACTIVITY_FOR_RESULT" -> {
+                // pick image only intent
+                val intent = Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                )
+
+                // pick video only intent
+//                 val intent = Intent(
+//                     Intent.ACTION_PICK,
+//                     android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+//                 )
+
+                // if want to allow multiple
+                intent.apply {
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                }
+
+                pickMediaActivityForResultLauncher.launch(intent)
+            }
+
+            "ACTIVITY_LIST_OF_ALBUM" -> {
                 val intent = Intent(this, ListAlbumActivity::class.java)
                 startActivity(intent)
+            }
+
+            "GET_LIST_OF_ALBUM" -> {
+
             }
 
             "GET_IMAGE_ALBUMS" -> {
@@ -146,9 +252,9 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
                 startActivity(intent)
             }
 
-            "GET_ALL_IMAGE" -> {
-                val intent = Intent(this, ListImageActivity::class.java)
-                startActivity(intent)
+            "GET_ALL_IMAGES" -> {
+                val photos = mediaGrab.getPhotos(this)
+                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% total photos: ${photos.size}")
             }
 
             "GET_ALL_VIDEO" -> {
@@ -168,118 +274,5 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 //                startActivityForResult(Intent.createChooser(intent, null), 900)
 //            }
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        println("MASUK REQUEST CODE: $requestCode")
-        println("MASUK RESULT CODE: $resultCode")
-        if (requestCode == 900 && resultCode == Activity.RESULT_OK) {
-            val itemCount = data?.clipData?.itemCount
-
-            if (itemCount != null) {
-                var currentItem = 0
-                while (currentItem < itemCount) {
-                    val currentUri = data.clipData?.getItemAt(currentItem)?.uri
-                    println("MASUK PATH: $currentUri")
-                    println("MASUK REAL PATH: ${getRealPathFromURI(this, currentUri!!)}")
-                    currentItem++
-                }
-            }
-
-
-            println("MASUK ITEM COUNT: ${data?.clipData?.itemCount}")
-        }
-    }
-
-    fun isExternalStorageDocument(uri: Uri): Boolean {
-        return "com.android.externalstorage.documents" == uri.authority
-    }
-
-    fun getDataColumn(
-        context: Context, uri: Uri?, selection: String?,
-        selectionArgs: Array<String?>?,
-    ): String? {
-        var cursor: Cursor? = null
-        val column = "_data"
-        val projection = arrayOf(
-            column
-        )
-
-        try {
-            cursor = context.contentResolver.query(
-                uri!!, projection, selection, selectionArgs,
-                null
-            )
-            if (cursor != null && cursor.moveToFirst()) {
-                val index = cursor.getColumnIndexOrThrow(column)
-                return cursor.getString(index)
-            }
-        } finally {
-            cursor?.close()
-        }
-        return null
-    }
-
-    fun getRealPathFromURI(context: Context, uri: Uri): String? {
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-//            if (isExternalStorageDocument(uri)) {
-//                val docId = DocumentsContract.getDocumentId(uri);
-//                val split = docId . split (":");
-//                val type = split[0];
-//
-//                if ("primary".equals(type, ignoreCase = true)) {
-//                    return "${Environment.getExternalStorageDirectory().path}/${split[1]}"
-//                }
-//
-//                // TODO handle non-primary volumes
-//            } else if (isDownloadsDocument(uri)) {
-//                final String id = DocumentsContract.getDocumentId(uri);
-//                final Uri contentUri = ContentUris.withAppendedId(
-//                    Uri.parse("content://downloads/public_downloads"), Long.valueOf(id)
-//                );
-//
-//                return getDataColumn(context, contentUri, null, null);
-//            } else if (isMediaDocument(uri)) {
-//                final String docId = DocumentsContract.getDocumentId(uri);
-//                final String [] split = docId . split (":");
-//                final String type = split[0];
-//
-//                Uri contentUri = null;
-//                if ("image".equals(type)) {
-//                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-//                } else if ("video".equals(type)) {
-//                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-//                } else if ("audio".equals(type)) {
-//                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//                }
-//
-//                final String selection = "_id=?";
-//                final String [] selectionArgs = new String[] {
-//                    split[1]
-//                };
-//
-//                return getDataColumn(context, contentUri, selection, selectionArgs);
-//            }
-//        } else
-
-//            else if ("file".equalsIgnoreCase(uri.getScheme())) {
-//            return uri.getPath();
-//        }
-
-        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-
-            println("MASUK SINI CONTENT SCHEME")
-
-            // Return the remote address
-//            if (isGooglePhotosUri(uri))
-//                return uri.getLastPathSegment();
-
-            return getDataColumn(context, uri, null, null);
-        }
-        return null;
     }
 }

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import com.fadlurahmanfdev.media_grab.constant.MediaGrabExceptionConstant
-import com.fadlurahmanfdev.media_grab.data.model.MediaItemModelV2
+import com.fadlurahmanfdev.media_grab.data.model.MediaGrabItemModel
 
 abstract class BaseMediaGrab {
     fun getPhotoCursor(context: Context): Cursor? {
@@ -184,11 +184,16 @@ abstract class BaseMediaGrab {
         }
     }
 
-    fun getMediaItemModelFromUri(context: Context, uri: Uri): MediaItemModelV2? {
+    fun getMediaItemModelFromUri(context: Context, uri: Uri): MediaGrabItemModel? {
         when {
             DocumentsContract.isDocumentUri(context, uri) -> {
+                Log.d(this::class.java.simpleName, "MediaGrab-LOG %%% item is a document URI")
                 when {
                     isExternalStorageDocument(uri) -> {
+                        Log.d(
+                            this::class.java.simpleName,
+                            "MediaGrab-LOG %%% item is an external storage document"
+                        )
                         val docId = DocumentsContract.getDocumentId(uri)
                         val split = docId.split(":").toTypedArray()
                         val type = split[0]
@@ -197,19 +202,23 @@ abstract class BaseMediaGrab {
                             if (split.size > 1) {
                                 Environment.getExternalStorageDirectory()
                                     .toString() + "/" + split[1]
-                                MediaItemModelV2()
+                                MediaGrabItemModel(path = "fake", displayName = "fake")
                             } else {
                                 Environment.getExternalStorageDirectory().toString() + "/"
-                                MediaItemModelV2()
+                                MediaGrabItemModel(path = "fake", displayName = "fake")
                             }
                             // This is for checking SD Card
                         } else {
                             "storage" + "/" + docId.replace(":", "/")
-                            MediaItemModelV2()
+                            MediaGrabItemModel(path = "fake", displayName = "fake")
                         }
                     }
 
                     isMediaDocument(uri) -> {
+                        Log.d(
+                            this::class.java.simpleName,
+                            "MediaGrab-LOG %%% item is a media document"
+                        )
                         val docId = DocumentsContract.getDocumentId(uri)
                         val split = docId.split(":").toTypedArray()
                         val type = split[0]
@@ -232,7 +241,6 @@ abstract class BaseMediaGrab {
 
                         if (contentUri == null) return null
 
-
                         return getMediaItemFromCursor(
                             context,
                             contentUri,
@@ -248,7 +256,8 @@ abstract class BaseMediaGrab {
             }
 
             "content".equals(uri.scheme, ignoreCase = true) -> {
-                return if (isGooglePhotosUri(uri)) MediaItemModelV2() else getMediaItemFromCursor(
+                Log.d(this::class.java.simpleName, "MediaGrab-LOG %%% item have scheme content")
+                return if (isGooglePhotosUri(uri)) throw Exception() else getMediaItemFromCursor(
                     context,
                     uri,
                     null,
@@ -299,12 +308,13 @@ abstract class BaseMediaGrab {
         uri: Uri,
         selection: String?,
         selectionArgs: Array<String>?,
-    ): MediaItemModelV2? {
+    ): MediaGrabItemModel {
         val cursor: Cursor?
 
         val projection = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns.DISPLAY_NAME,
             MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.BUCKET_ID,
             MediaStore.MediaColumns.DATE_ADDED,
@@ -331,9 +341,12 @@ abstract class BaseMediaGrab {
 
         try {
             if (cursor.moveToFirst()) {
-                return MediaItemModelV2(
+                return MediaGrabItemModel(
                     id = getId(cursor),
-                    path = getData(cursor),
+                    path = getPath(cursor)
+                        ?: throw MediaGrabExceptionConstant.UNABLE_GET_REAL_PATH,
+                    displayName = getDisplayName(cursor)
+                        ?: throw MediaGrabExceptionConstant.UNABLE_GET_DISPLAY_NAME,
                     bucketId = getBucketId(cursor),
                     bucketName = getBucketName(cursor),
                     dateAdded = getDateAdded(cursor),
@@ -341,40 +354,48 @@ abstract class BaseMediaGrab {
                     dateModified = getDateModified(cursor),
                     resolution = getResolution(cursor),
                 )
+            } else {
+                throw Exception()
             }
         } catch (t: Throwable) {
             Log.e(this::class.java.simpleName, "MediaGrab-LOG %%% failed get data", t)
+            throw t
         } finally {
             cursor.close()
         }
-        return null
     }
 
-    private fun getId(cursor: Cursor): Long? =
+    fun getId(cursor: Cursor): Long? =
         getLongColumn(cursor, MediaStore.MediaColumns._ID)
 
-    private fun getBucketId(cursor: Cursor): Long? =
+    fun getDisplayName(cursor: Cursor): String? =
+        getStringColumn(cursor, MediaStore.MediaColumns.DISPLAY_NAME)
+
+    fun getBucketId(cursor: Cursor): Long? =
         getLongColumn(cursor, MediaStore.MediaColumns.BUCKET_ID)
 
-    private fun getData(cursor: Cursor): String? =
+    fun getPath(cursor: Cursor): String? =
         getStringColumn(cursor, MediaStore.MediaColumns.DATA)
 
-    private fun getBucketName(cursor: Cursor): String? =
+    fun getMimeType(cursor: Cursor): String? =
+        getStringColumn(cursor, MediaStore.MediaColumns.MIME_TYPE)
+
+    fun getBucketName(cursor: Cursor): String? =
         getStringColumn(cursor, MediaStore.MediaColumns.BUCKET_DISPLAY_NAME)
 
-    private fun getDateAdded(cursor: Cursor): Long? =
+    fun getDateAdded(cursor: Cursor): Long? =
         getLongColumn(cursor, MediaStore.MediaColumns.DATE_ADDED)
 
-    private fun getDateTaken(cursor: Cursor): Long? =
+    fun getDateTaken(cursor: Cursor): Long? =
         getLongColumn(cursor, MediaStore.MediaColumns.DATE_TAKEN)
 
-    private fun getDateModified(cursor: Cursor): Long? =
+    fun getDateModified(cursor: Cursor): Long? =
         getLongColumn(cursor, MediaStore.MediaColumns.DATE_MODIFIED)
 
-    private fun getResolution(cursor: Cursor): String? =
+    fun getResolution(cursor: Cursor): String? =
         getStringColumn(cursor, MediaStore.MediaColumns.RESOLUTION)
 
-    private fun getLongColumn(cursor: Cursor, column: String): Long? {
+    fun getLongColumn(cursor: Cursor, column: String): Long? {
         return try {
             val index = cursor.getColumnIndexOrThrow(column)
             cursor.getLongOrNull(index)
@@ -383,16 +404,21 @@ abstract class BaseMediaGrab {
         }
     }
 
-    private fun getStringColumn(cursor: Cursor, column: String): String? {
+    fun getStringColumn(cursor: Cursor, column: String): String? {
         return try {
             val index = cursor.getColumnIndexOrThrow(column)
             cursor.getStringOrNull(index)
         } catch (e: Throwable) {
+            Log.e(
+                this::class.java.simpleName,
+                "MediaGrab-LOG %%% failed to get string column: $column",
+                e
+            )
             null
         }
     }
 
-    private fun validatePermission(context: Context, permission: String) {
+    fun validatePermission(context: Context, permission: String) {
         if (ContextCompat.checkSelfPermission(
                 context,
                 permission
