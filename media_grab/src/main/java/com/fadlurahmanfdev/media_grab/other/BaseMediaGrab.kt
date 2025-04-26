@@ -12,41 +12,30 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
+import com.fadlurahmanfdev.media_grab.MediaGrab
 import com.fadlurahmanfdev.media_grab.constant.MediaGrabExceptionConstant
 import com.fadlurahmanfdev.media_grab.data.model.MediaGrabItemModel
 
 abstract class BaseMediaGrab {
-    fun getPhotoCursor(context: Context): Cursor? {
-        val projections = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.DATE_ADDED,
-        )
-
-        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-
-        return context.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projections,
-            null,
-            null,
-            sortOrder,
-        )
-    }
+    fun getPhotoCursor(context: Context): Cursor? = getPhotoCursor(context, null, null)
 
     fun getPhotoCursor(
         context: Context,
-        selection: String,
+        selection: String?,
         selectionArgs: Array<String>?,
     ): Cursor? {
         val projections = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.MIME_TYPE,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media.DATE_MODIFIED,
+            MediaStore.Images.Media.DATE_TAKEN,
+            MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media.RESOLUTION,
         )
 
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
@@ -60,37 +49,26 @@ abstract class BaseMediaGrab {
         )
     }
 
-    fun getVideoCursor(context: Context): Cursor? {
-        val projections = arrayOf(
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DATA,
-            MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Video.Media.BUCKET_ID,
-            MediaStore.Video.Media.DATE_ADDED,
-        )
-
-        val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} DESC"
-
-        return context.contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            projections,
-            null,
-            null,
-            sortOrder,
-        )
-    }
+    fun getVideoCursor(context: Context): Cursor? = getVideoCursor(context, null, null)
 
     fun getVideoCursor(
         context: Context,
-        selection: String,
+        selection: String?,
         selectionArgs: Array<String>?,
     ): Cursor? {
         val projections = arrayOf(
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media.DISPLAY_NAME,
+            MediaStore.Video.Media.MIME_TYPE,
             MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Video.Media.BUCKET_ID,
             MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.DATE_MODIFIED,
+            MediaStore.Video.Media.DATE_TAKEN,
+            MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.RESOLUTION,
+            MediaStore.Video.Media.DURATION,
         )
 
         val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} DESC"
@@ -102,16 +80,6 @@ abstract class BaseMediaGrab {
             selectionArgs,
             sortOrder,
         )
-    }
-
-    fun getIntentPickImage(allowMultiple: Boolean = false): Intent {
-        return Intent(
-            Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        ).apply {
-            setType("image/*")
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple)
-        }
     }
 
     fun getRealPathFromUri(context: Context, uri: Uri): String? {
@@ -190,28 +158,29 @@ abstract class BaseMediaGrab {
                 Log.d(this::class.java.simpleName, "MediaGrab-LOG %%% item is a document URI")
                 when {
                     isExternalStorageDocument(uri) -> {
-                        Log.d(
-                            this::class.java.simpleName,
-                            "MediaGrab-LOG %%% item is an external storage document"
-                        )
-                        val docId = DocumentsContract.getDocumentId(uri)
-                        val split = docId.split(":").toTypedArray()
-                        val type = split[0]
-                        // This is for checking Main Memory
-                        return if ("primary".equals(type, ignoreCase = true)) {
-                            if (split.size > 1) {
-                                Environment.getExternalStorageDirectory()
-                                    .toString() + "/" + split[1]
-                                MediaGrabItemModel(path = "fake", displayName = "fake")
-                            } else {
-                                Environment.getExternalStorageDirectory().toString() + "/"
-                                MediaGrabItemModel(path = "fake", displayName = "fake")
-                            }
-                            // This is for checking SD Card
-                        } else {
-                            "storage" + "/" + docId.replace(":", "/")
-                            MediaGrabItemModel(path = "fake", displayName = "fake")
-                        }
+                        throw MediaGrabExceptionConstant.UNEXPECTED.copy(code = "UNIMPLEMENTED")
+//                        Log.d(
+//                            this::class.java.simpleName,
+//                            "MediaGrab-LOG %%% item is an external storage document"
+//                        )
+//                        val docId = DocumentsContract.getDocumentId(uri)
+//                        val split = docId.split(":").toTypedArray()
+//                        val type = split[0]
+//                        // This is for checking Main Memory
+//                        return if ("primary".equals(type, ignoreCase = true)) {
+//                            if (split.size > 1) {
+//                                Environment.getExternalStorageDirectory()
+//                                    .toString() + "/" + split[1]
+//                                MediaGrabItemModel(path = "fake", displayName = "fake", id = 11)
+//                            } else {
+//                                Environment.getExternalStorageDirectory().toString() + "/"
+//                                MediaGrabItemModel(path = "fake", displayName = "fake", id = 2011)
+//                            }
+//                            // This is for checking SD Card
+//                        } else {
+//                            "storage" + "/" + docId.replace(":", "/")
+//                            MediaGrabItemModel(path = "fake", displayName = "fake", id = 1021)
+//                        }
                     }
 
                     isMediaDocument(uri) -> {
@@ -250,7 +219,7 @@ abstract class BaseMediaGrab {
                     }
 
                     else -> {
-                        return null
+                        throw MediaGrabExceptionConstant.UNEXPECTED.copy(code = "UNIMPLEMENTED")
                     }
                 }
             }
@@ -342,17 +311,18 @@ abstract class BaseMediaGrab {
         try {
             if (cursor.moveToFirst()) {
                 return MediaGrabItemModel(
-                    id = getId(cursor),
+                    id = getId(cursor) ?: throw MediaGrabExceptionConstant.UNABLE_GET_ID,
                     path = getPath(cursor)
                         ?: throw MediaGrabExceptionConstant.UNABLE_GET_REAL_PATH,
-                    displayName = getDisplayName(cursor)
+                    name = getDisplayName(cursor)
                         ?: throw MediaGrabExceptionConstant.UNABLE_GET_DISPLAY_NAME,
-                    bucketId = getBucketId(cursor),
-                    bucketName = getBucketName(cursor),
                     dateAdded = getDateAdded(cursor),
-                    dateTaken = getDateTaken(cursor),
                     dateModified = getDateModified(cursor),
                     resolution = getResolution(cursor),
+                    bucket = MediaGrabItemModel.Bucket(
+                        id = getBucketId(cursor),
+                        name = getBucketName(cursor),
+                    )
                 )
             } else {
                 throw Exception()
@@ -379,6 +349,9 @@ abstract class BaseMediaGrab {
 
     fun getMimeType(cursor: Cursor): String? =
         getStringColumn(cursor, MediaStore.MediaColumns.MIME_TYPE)
+
+    fun getDuration(cursor: Cursor): Long? =
+        getLongColumn(cursor, MediaStore.MediaColumns.DURATION)
 
     fun getBucketName(cursor: Cursor): String? =
         getStringColumn(cursor, MediaStore.MediaColumns.BUCKET_DISPLAY_NAME)
@@ -424,7 +397,7 @@ abstract class BaseMediaGrab {
                 permission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            throw MediaGrabExceptionConstant.EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED
+            throw MediaGrabExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
         }
     }
 
