@@ -1,13 +1,13 @@
 package com.fadlurahmanfdev.example.domain
 
 import android.content.Context
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabAlbumModel
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabItemModel
+import com.fadlurahmanfdev.pixmed.data.model.PixMedBucket
+import com.fadlurahmanfdev.pixmed.data.model.PixMedItem
 
 interface ExampleMediaUseCase {
-    fun getAlbums(context: Context): List<MediaGrabAlbumModel>
-    fun getPhotoAlbums(context: Context): List<MediaGrabAlbumModel>
-    fun getVideoAlbums(context: Context): List<MediaGrabAlbumModel>
-    fun getPhotos(context: Context, albumId: Long?): List<MediaGrabItemModel>
-    fun getVideos(context: Context, albumId: Long?): List<MediaGrabItemModel>
+    fun getAlbums(context: Context): List<PixMedBucket>
+    fun getPhotoAlbums(context: Context): List<PixMedBucket>
+    fun getVideoAlbums(context: Context): List<PixMedBucket>
+    fun getPhotos(context: Context, albumId: Long?): List<PixMedItem>
+    fun getVideos(context: Context, albumId: Long?): List<PixMedItem>
 }

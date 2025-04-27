@@ -11,13 +11,13 @@ import com.fadlurahmanfdev.example.MainViewModel
 import com.fadlurahmanfdev.example.R
 import com.fadlurahmanfdev.example.domain.ExampleMediaUseCaseImpl
 import com.fadlurahmanfdev.example.presentation.adapter.GridMediaAdapter
-import com.fadlurahmanfdev.media_grab.MediaGrab
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabItemModel
+import com.fadlurahmanfdev.pixmed.PixMed
+import com.fadlurahmanfdev.pixmed.data.model.PixMedItem
 
 class ListVideoActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel
     lateinit var adapter: GridMediaAdapter
-    private var images = arrayListOf<MediaGrabItemModel>()
+    private var images = arrayListOf<PixMedItem>()
 
     lateinit var recyclerView: RecyclerView
 
@@ -36,7 +36,7 @@ class ListVideoActivity : AppCompatActivity() {
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaGrab()
+                mediaRepository = PixMed()
             )
         )
 

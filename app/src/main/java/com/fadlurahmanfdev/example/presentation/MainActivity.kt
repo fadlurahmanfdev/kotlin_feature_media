@@ -2,9 +2,7 @@ package com.fadlurahmanfdev.example.presentation
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -18,12 +16,12 @@ import com.fadlurahmanfdev.example.R
 import com.fadlurahmanfdev.example.data.FeatureModel
 import com.fadlurahmanfdev.example.domain.ExampleMediaUseCaseImpl
 import com.fadlurahmanfdev.example.presentation.adapter.ListExampleAdapter
-import com.fadlurahmanfdev.media_grab.MediaGrab
+import com.fadlurahmanfdev.pixmed.PixMed
 
 
 class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     lateinit var viewModel: MainViewModel
-    lateinit var mediaGrab: MediaGrab
+    lateinit var pixMed: PixMed
 
     private val features: List<FeatureModel> = listOf<FeatureModel>(
         FeatureModel(
@@ -49,6 +47,18 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             title = "Multiple Pick Content",
             desc = "Multiple Pick content",
             enum = "MULTIPLE_PICK_CONTENT"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Open Document",
+            desc = "Open Document",
+            enum = "OPEN_DOCUMENT"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Open Multiple Document",
+            desc = "Open Multiple Document",
+            enum = "OPEN_MULTIPLE_DOCUMENT"
         ),
         FeatureModel(
             featureIcon = R.drawable.baseline_developer_mode_24,
@@ -103,10 +113,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private var singlePickVisualMediaLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             uri?.let {
-                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
                 Log.d(
                     this::class.java.simpleName,
-                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                    "Example-PixMedia-LOG %%% media item: $mediaItem"
                 )
             }
         }
@@ -114,10 +124,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private var multiplePickVisualMediaLauncher =
         registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
             uris?.forEach { uri ->
-                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
                 Log.d(
                     this::class.java.simpleName,
-                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                    "Example-PixMedia-LOG %%% media item: $mediaItem"
                 )
             }
         }
@@ -125,10 +135,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private var singlePickContentLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
+                val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
                 Log.d(
                     this::class.java.simpleName,
-                    "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                    "Example-PixMedia-LOG %%% media item: $mediaItem"
                 )
             }
         }
@@ -136,15 +146,41 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
     private var multiplePickContentLauncher =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             uris?.let {
-             uris.forEach { uri ->
-                 uri.let {
-                     val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri)
-                     Log.d(
-                         this::class.java.simpleName,
-                         "Example-MediaGrab-LOG %%% media item: $mediaItem"
-                     )
-                 }
-             }
+                uris.forEach { uri ->
+                    uri.let {
+                        val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
+                        Log.d(
+                            this::class.java.simpleName,
+                            "Example-PixMedia-LOG %%% media item: $mediaItem"
+                        )
+                    }
+                }
+            }
+        }
+
+    private var openDocumentLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let {
+                val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
+                Log.d(
+                    this::class.java.simpleName,
+                    "Example-PixMedia-LOG %%% media item: $mediaItem"
+                )
+            }
+        }
+
+    private var openMultipleDocumentLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+            uris?.let {
+                uris.forEach { uri ->
+                    uri.let {
+                        val mediaItem = pixMed.getMediaItemModelFromUri(this, uri)
+                        Log.d(
+                            this::class.java.simpleName,
+                            "Example-PixMedia-LOG %%% media item: $mediaItem"
+                        )
+                    }
+                }
             }
         }
 
@@ -157,10 +193,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
                     var currentItem = 0
                     while (currentItem < itemCount) {
                         val uri = result.data?.clipData?.getItemAt(currentItem)?.uri
-                        val mediaItem = mediaGrab.getMediaItemModelFromUri(this, uri!!)
+                        val mediaItem = pixMed.getMediaItemModelFromUri(this, uri!!)
                         Log.d(
                             this::class.java.simpleName,
-                            "Example-MediaGrab-LOG %%% media item: $mediaItem"
+                            "Example-PixMedia-LOG %%% media item: $mediaItem"
                         )
                         currentItem++
                     }
@@ -183,11 +219,11 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
         }
         rv = findViewById<RecyclerView>(R.id.rv)
 
-        mediaGrab = MediaGrab()
+        pixMed = PixMed()
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaGrab()
+                mediaRepository = PixMed()
             )
         )
 
@@ -222,10 +258,10 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 
             "SINGLE_PICK_CONTENT" -> {
                 // Image Only
-                singlePickContentLauncher.launch("image/*")
+//                singlePickContentLauncher.launch("image/*")
 
                 // Video Only
-//                singlePickContentLauncher.launch("video/*")
+                singlePickContentLauncher.launch("video/*")
 
                 // All + Include File
 //                singlePickContentLauncher.launch("*/*")
@@ -236,10 +272,38 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
 //                multiplePickContentLauncher.launch("image/*")
 
                 // Video Only
-//                multiplePickContentLauncher.launch("video/*")
+                multiplePickContentLauncher.launch("video/*")
 
                 // All + Include File
-                multiplePickContentLauncher.launch("*/*")
+//                multiplePickContentLauncher.launch("*/*")
+            }
+
+            "OPEN_DOCUMENT" -> {
+                // Image Only
+//                openDocumentLauncher.launch(arrayOf("image/*"))
+
+                // Video Only
+//                openDocumentLauncher.launch(arrayOf("video/*"))
+
+                // Image + Video
+                openDocumentLauncher.launch(arrayOf("image/*", "video/*"))
+
+                // All + Include File
+//                openDocumentLauncher.launch(arrayOf("*/*"))
+            }
+
+            "OPEN_MULTIPLE_DOCUMENT" -> {
+                // Image Only
+//                openMultipleDocumentLauncher.launch(arrayOf("image/*"))
+
+                // Video Only
+//                openMultipleDocumentLauncher.launch(arrayOf("video/*"))
+
+                // Image + Video
+                openMultipleDocumentLauncher.launch(arrayOf("image/*", "video/*"))
+
+                // All + Include File
+//                openMultipleDocumentLauncher.launch(arrayOf("*/*"))
             }
 
             "PICK_IMAGE_ACTIVITY_FOR_RESULT" -> {
@@ -248,6 +312,12 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
                     Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 )
+
+                // if we also want to pick video
+
+                intent.apply {
+                    setType("image/*,video/*")
+                }
 
                 // pick video only intent
 //                 val intent = Intent(
@@ -264,26 +334,26 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             }
 
             "GET_LIST_OF_ALBUM" -> {
-                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% PHOTO ALBUMS")
-                val photoAlbums = mediaGrab.getPhotoAlbums(this)
+                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% PHOTO ALBUMS")
+                val photoAlbums = pixMed.getPhotoAlbums(this)
                 photoAlbums.forEach {
                     Log.d(
                         this::class.java.simpleName,
-                        "Example-MediaGrab-LOG %%% - photo album: $it"
+                        "Example-PixMedia-LOG %%% - photo album: $it"
                     )
                 }
-                val videoAlbums = mediaGrab.getVideoAlbums(this)
-                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% VIDEO ALBUMS")
+                val videoAlbums = pixMed.getVideoAlbums(this)
+                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% VIDEO ALBUMS")
                 videoAlbums.forEach {
                     Log.d(
                         this::class.java.simpleName,
-                        "Example-MediaGrab-LOG %%% - video album: $it"
+                        "Example-PixMedia-LOG %%% - video album: $it"
                     )
                 }
-                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% ALL ALBUMS")
-                val allAlbums = mediaGrab.getAlbums(this)
+                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% ALL ALBUMS")
+                val allAlbums = pixMed.getAlbums(this)
                 allAlbums.forEach {
-                    Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% - album: $it")
+                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% - album: $it")
                 }
             }
 
@@ -303,34 +373,34 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             }
 
             "GET_ALL_IMAGES" -> {
-                val photos = mediaGrab.getPhotos(this)
+                val photos = pixMed.getPhotos(this)
                 Log.d(
                     this::class.java.simpleName,
-                    "Example-MediaGrab-LOG %%% total photos: ${photos.size}"
+                    "Example-PixMedia-LOG %%% total photos: ${photos.size}"
                 )
                 photos.items?.forEach {
-                    Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% item: ${it}")
+                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
                 }
 
                 // fetch images using pagination
 //                val result = mediaGrab.getPhotos(this, offset = 0, size = 20)
-//                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% result: $result")
+//                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% result: $result")
 //                result.items?.forEach {
-//                    Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% item: ${it}")
+//                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
 //                }
             }
 
             "GET_ALL_VIDEOS" -> {
-                val videos = mediaGrab.getVideos(this)
+                val videos = pixMed.getVideos(this)
                 videos.items?.forEach {
-                    Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% item: ${it}")
+                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
                 }
 
                 // fetch videos using pagination
 //                val result = mediaGrab.getVideos(this, 0, 20)
-//                Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% result: $result")
+//                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% result: $result")
 //                videos.forEach {
-//                    Log.d(this::class.java.simpleName, "Example-MediaGrab-LOG %%% item: ${it}")
+//                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
 //                }
             }
 

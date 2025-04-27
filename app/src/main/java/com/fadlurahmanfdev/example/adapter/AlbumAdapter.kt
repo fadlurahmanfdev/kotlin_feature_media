@@ -10,18 +10,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fadlurahmanfdev.example.R
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabAlbumModel
+import com.fadlurahmanfdev.pixmed.data.model.PixMedBucket
 import java.io.File
 
 class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
-    val albums: ArrayList<MediaGrabAlbumModel> = arrayListOf()
+    val albums: ArrayList<PixMedBucket> = arrayListOf()
     private lateinit var callback: Callback
 
     fun setCallback(callback: Callback) {
         this.callback = callback
     }
 
-    fun setAlbums(list: List<MediaGrabAlbumModel>) {
+    fun setAlbums(list: List<PixMedBucket>) {
         if (albums.isNotEmpty()) {
             val oldSize = albums.size
             albums.clear()
@@ -73,6 +73,6 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
     }
 
     interface Callback {
-        fun onClicked(album: MediaGrabAlbumModel)
+        fun onClicked(album: PixMedBucket)
     }
 }

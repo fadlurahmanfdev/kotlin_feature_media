@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "kotlin_feature_media"
 include(":app")
-include(":media_grab")
+include(":pixmed")

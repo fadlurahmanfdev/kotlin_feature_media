@@ -8,13 +8,13 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.fadlurahmanfdev.example.R
 import com.bumptech.glide.Glide
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabItemModel
+import com.fadlurahmanfdev.pixmed.data.model.PixMedItem
 import java.io.File
 
 class GridMediaAdapter : RecyclerView.Adapter<GridMediaAdapter.ViewHolder>() {
-    private val images = arrayListOf<MediaGrabItemModel>()
+    private val images = arrayListOf<PixMedItem>()
 
-    fun setImages(list: List<MediaGrabItemModel>) {
+    fun setImages(list: List<PixMedItem>) {
         if (images.isNotEmpty()) {
             val oldSize = images.size
             images.clear()
@@ -28,7 +28,7 @@ class GridMediaAdapter : RecyclerView.Adapter<GridMediaAdapter.ViewHolder>() {
         val image = view.findViewById<ImageView>(R.id.image)
         val videoIcon = view.findViewById<ImageView>(R.id.videoIcon)
 
-        fun setItemView(item: MediaGrabItemModel) {
+        fun setItemView(item: PixMedItem) {
             Glide.with(image).load(Uri.fromFile(File(item.path))).into(image)
 
 //            if (item.type == MediaItemType.VIDEO) {

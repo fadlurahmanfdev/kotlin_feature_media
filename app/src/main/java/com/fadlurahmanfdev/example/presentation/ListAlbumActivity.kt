@@ -11,8 +11,8 @@ import com.fadlurahmanfdev.example.MainViewModel
 import com.fadlurahmanfdev.example.R
 import com.fadlurahmanfdev.example.domain.ExampleMediaUseCaseImpl
 import com.fadlurahmanfdev.example.presentation.adapter.AlbumAdapter
-import com.fadlurahmanfdev.media_grab.MediaGrab
-import com.fadlurahmanfdev.media_grab.data.model.MediaGrabAlbumModel
+import com.fadlurahmanfdev.pixmed.PixMed
+import com.fadlurahmanfdev.pixmed.data.model.PixMedBucket
 
 class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
     lateinit var viewModel: MainViewModel
@@ -20,7 +20,7 @@ class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: AlbumAdapter
 
-    private val albums: ArrayList<MediaGrabAlbumModel> = arrayListOf()
+    private val albums: ArrayList<PixMedBucket> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
 
         viewModel = MainViewModel(
             exampleMediaUseCase = ExampleMediaUseCaseImpl(
-                mediaRepository = MediaGrab()
+                mediaRepository = PixMed()
             )
         )
 
@@ -52,7 +52,7 @@ class ListAlbumActivity : AppCompatActivity(), AlbumAdapter.Callback {
         adapter.setAlbums(albums)
     }
 
-    override fun onClicked(album: MediaGrabAlbumModel) {
+    override fun onClicked(album: PixMedBucket) {
 //        val intent = Intent(this, ListVideoActivity::class.java)
 //        intent.apply {
 //            putExtra("ALBUM_ID", album.id)
