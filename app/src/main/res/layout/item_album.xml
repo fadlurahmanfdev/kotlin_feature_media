@@ -42,12 +42,14 @@
             android:id="@+id/albumName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_regular"
             android:text="Album Name" />
 
         <TextView
             android:id="@+id/itemCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_medium"
             android:text="1" />
     </LinearLayout>
 

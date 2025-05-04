@@ -3,6 +3,7 @@ package com.fadlurahmanfdev.pixmed
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.fadlurahmanfdev.pixmed.constant.PixMedExceptionConstant
@@ -17,17 +18,32 @@ class PixMed : BasePixMed(), PixMedRepository {
     /**
      * Get list of all photos in gallery.
      *
-     * @throws PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED permission not granted
+     * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
     override fun getPhotos(context: Context): PixMedPickerResult {
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.READ_MEDIA_IMAGES
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_MEDIA_IMAGES
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED
+                    }
+                }
+
+                else -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED
+                    }
+                }
             }
+
             val photos = getMediaItems(context, ::getPhotoCursor, ::getMediaGrabPhoto)
             return PixMedPickerResult(
                 size = photos.size,
@@ -51,7 +67,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      * @param offset where should index start from.
      * @param size total item in one fetch/request.
      *
-     * @throws PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED permission not granted
+     * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
     override fun getPhotos(
         context: Context,
@@ -59,12 +75,26 @@ class PixMed : BasePixMed(), PixMedRepository {
         size: Int,
     ): PixMedPickerResult {
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.READ_MEDIA_IMAGES
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_MEDIA_IMAGES
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED
+                    }
+                }
+
+                else -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED
+                    }
+                }
             }
             return getMediaItems(context, offset, size, ::getPhotoCursor, ::getMediaGrabPhoto)
         } catch (t: Throwable) {
@@ -79,16 +109,30 @@ class PixMed : BasePixMed(), PixMedRepository {
     /**
      * Get list of all videos in gallery.
      *
-     * @throws PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED permission not granted
+     * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
     override fun getVideos(context: Context): PixMedPickerResult {
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.READ_MEDIA_VIDEO
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_MEDIA_IMAGES
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED
+                    }
+                }
+
+                else -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED
+                    }
+                }
             }
             val videos = getMediaItems(context, ::getVideoCursor, ::getMediaGrabVideo)
             return PixMedPickerResult(
@@ -113,7 +157,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      * @param offset where should index start from.
      * @param size total item in one fetch/request.
      *
-     * @throws PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED permission not granted
+     * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
     override fun getVideos(
         context: Context,
@@ -121,12 +165,26 @@ class PixMed : BasePixMed(), PixMedRepository {
         size: Int,
     ): PixMedPickerResult {
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.READ_MEDIA_VIDEO
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_MEDIA_IMAGES
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED
+                    }
+                }
+
+                else -> {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        throw PixMedExceptionConstant.READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED
+                    }
+                }
             }
             return getMediaItems(context, offset, size, ::getVideoCursor, ::getMediaGrabVideo)
         } catch (t: Throwable) {

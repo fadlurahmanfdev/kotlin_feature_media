@@ -419,7 +419,7 @@ abstract class BasePixMed {
                 permission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            throw PixMedExceptionConstant.READ_MEDIA_PERMISSION_NOT_GRANTED
+            throw PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED
         }
     }
 

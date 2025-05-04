@@ -3,9 +3,13 @@ package com.fadlurahmanfdev.pixmed.constant
 import com.fadlurahmanfdev.pixmed.exception.PixMedException
 
 object PixMedExceptionConstant {
-    val READ_MEDIA_PERMISSION_NOT_GRANTED = PixMedException(
+    val READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED = PixMedException(
         code = "READ_MEDIA_PERMISSION_NOT_GRANTED",
-        message = "External storage permission not granted"
+        message = "Read media images permission not granted"
+    )
+    val READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED = PixMedException(
+        code = "READ_EXTERNAL_STORAGE_PERMISSION_NOT_GRANTED",
+        message = "Read external storage permission not granted"
     )
 
     val CANNOT_INITIALIZED_CURSOR = PixMedException(
