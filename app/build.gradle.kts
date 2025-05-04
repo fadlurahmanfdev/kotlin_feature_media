@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "co.id.fadlurahmanf.kotlin_feature_media"
+    namespace = "com.fadlurahmanfdev.example"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "co.id.fadlurahmanf.kotlin_feature_media"
+        applicationId = "com.fadlurahmanfdev.example"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 }
 
@@ -45,8 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project(":kotlin_feature_media"))
+    implementation(project(":pixmed"))
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 }
