@@ -1,6 +1,7 @@
 package com.fadlurahmanfdev.pixmed.data.repositories
 
 import android.content.Context
+import android.database.Cursor
 import com.fadlurahmanfdev.pixmed.PixMed
 import com.fadlurahmanfdev.pixmed.data.model.PixMedBucket
 import com.fadlurahmanfdev.pixmed.data.model.PixMedPickerResult
@@ -14,7 +15,7 @@ interface PixMedRepository {
     /**
      * Get list all of photos
      * */
-    fun getPhotos(context: Context): PixMedPickerResult
+    fun getPhotos(context: Context, cursorProvider: ((Context) -> Cursor?)?): PixMedPickerResult
 
     /**
      * Get list all of photos with pagination.
@@ -24,6 +25,7 @@ interface PixMedRepository {
      * */
     fun getPhotos(
         context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
         offset: Int = 0,
         size: Int = 20,
     ): PixMedPickerResult
@@ -31,7 +33,7 @@ interface PixMedRepository {
     /**
      * Get list all of videos
      * */
-    fun getVideos(context: Context): PixMedPickerResult
+    fun getVideos(context: Context, cursorProvider: ((Context) -> Cursor?)?): PixMedPickerResult
 
     /**
      * Get list all of videos with pagination.
@@ -41,6 +43,7 @@ interface PixMedRepository {
      * */
     fun getVideos(
         context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
         offset: Int = 0,
         size: Int = 20,
     ): PixMedPickerResult

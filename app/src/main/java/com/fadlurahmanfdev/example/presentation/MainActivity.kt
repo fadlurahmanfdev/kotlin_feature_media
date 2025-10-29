@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -108,6 +109,12 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             title = "Get list of all videos",
             desc = "Get list of all videos",
             enum = "GET_ALL_VIDEOS"
+        ),
+        FeatureModel(
+            featureIcon = R.drawable.baseline_developer_mode_24,
+            title = "Get list of all files",
+            desc = "Get list of all files",
+            enum = "GET_ALL_FILES"
         ),
     )
 
@@ -374,7 +381,37 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             }
 
             "GET_ALL_IMAGES" -> {
-                val photos = pixMed.getPhotos(this)
+                val photos = pixMed.getPhotos(
+                    this,
+                    cursorProvider = null
+                )
+                Log.d(
+                    this::class.java.simpleName,
+                    "Example-PixMedia-LOG %%% total photos: ${photos.size}"
+                )
+                photos.items?.forEach {
+                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
+                }
+
+                // fetch images using pagination
+//                val result = mediaGrab.getPhotos(this, offset = 0, size = 20)
+//                Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% result: $result")
+//                result.items?.forEach {
+//                    Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
+//                }
+            }
+
+            "GET_ALL_IMAGES_BY_BUCKET_ID" -> {
+                val photos = pixMed.getPhotos(
+                    this,
+                    cursorProvider = { _ ->
+                        pixMed.getPhotoCursor(
+                            this,
+                            "${MediaStore.MediaColumns.BUCKET_ID} = ?",
+                            arrayOf("540528482")
+                        )
+                    },
+                )
                 Log.d(
                     this::class.java.simpleName,
                     "Example-PixMedia-LOG %%% total photos: ${photos.size}"
@@ -392,7 +429,7 @@ class MainActivity : AppCompatActivity(), ListExampleAdapter.Callback {
             }
 
             "GET_ALL_VIDEOS" -> {
-                val videos = pixMed.getVideos(this)
+                val videos = pixMed.getVideos(this, cursorProvider = null)
                 videos.items?.forEach {
                     Log.d(this::class.java.simpleName, "Example-PixMedia-LOG %%% item: ${it}")
                 }

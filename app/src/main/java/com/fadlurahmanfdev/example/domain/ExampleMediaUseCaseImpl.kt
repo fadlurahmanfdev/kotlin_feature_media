@@ -6,7 +6,7 @@ import com.fadlurahmanfdev.pixmed.data.model.PixMedItem
 import com.fadlurahmanfdev.pixmed.data.repositories.PixMedRepository
 
 class ExampleMediaUseCaseImpl(
-    private val mediaRepository: PixMedRepository
+    private val mediaRepository: PixMedRepository,
 ) : ExampleMediaUseCase {
     override fun getAlbums(context: Context): List<PixMedBucket> {
         return mediaRepository.getAlbums(context)
@@ -22,17 +22,17 @@ class ExampleMediaUseCaseImpl(
 
     override fun getPhotos(context: Context, albumId: Long?): List<PixMedItem> {
         return if (albumId != null) {
-            mediaRepository.getPhotos(context).items ?: listOf()
+            mediaRepository.getPhotos(context, cursorProvider = null).items ?: listOf()
         } else {
-            mediaRepository.getPhotos(context).items ?: listOf()
+            mediaRepository.getPhotos(context, cursorProvider = null).items ?: listOf()
         }
     }
 
     override fun getVideos(context: Context, albumId: Long?): List<PixMedItem> {
         return if (albumId != null) {
-            mediaRepository.getVideos(context).items ?: listOf()
+            mediaRepository.getVideos(context, cursorProvider = null).items ?: listOf()
         } else {
-            mediaRepository.getVideos(context).items ?: listOf()
+            mediaRepository.getVideos(context, cursorProvider = null).items ?: listOf()
         }
     }
 

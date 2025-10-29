@@ -20,7 +20,10 @@ class PixMed : BasePixMed(), PixMedRepository {
      *
      * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
-    override fun getPhotos(context: Context): PixMedPickerResult {
+    override fun getPhotos(
+        context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
+    ): PixMedPickerResult {
         try {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
@@ -44,7 +47,8 @@ class PixMed : BasePixMed(), PixMedRepository {
                 }
             }
 
-            val photos = getMediaItems(context, ::getPhotoCursor, ::getMediaGrabPhoto)
+            val photos =
+                getMediaItems(context, cursorProvider ?: (::getPhotoCursor), ::getMediaGrabPhoto)
             return PixMedPickerResult(
                 size = photos.size,
                 offset = 0,
@@ -71,6 +75,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      * */
     override fun getPhotos(
         context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
         offset: Int,
         size: Int,
     ): PixMedPickerResult {
@@ -96,7 +101,13 @@ class PixMed : BasePixMed(), PixMedRepository {
                     }
                 }
             }
-            return getMediaItems(context, offset, size, ::getPhotoCursor, ::getMediaGrabPhoto)
+            return getMediaItems(
+                context,
+                offset,
+                size,
+                cursorProvider ?: (::getPhotoCursor),
+                ::getMediaGrabPhoto
+            )
         } catch (t: Throwable) {
             Log.e(this::class.java.simpleName, "PixMedia-LOG %%% failed get photos", t)
             if (t is PixMedException) {
@@ -111,7 +122,10 @@ class PixMed : BasePixMed(), PixMedRepository {
      *
      * @throws PixMedExceptionConstant.READ_MEDIA_IMAGES_PERMISSION_NOT_GRANTED permission not granted
      * */
-    override fun getVideos(context: Context): PixMedPickerResult {
+    override fun getVideos(
+        context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
+    ): PixMedPickerResult {
         try {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
@@ -134,7 +148,8 @@ class PixMed : BasePixMed(), PixMedRepository {
                     }
                 }
             }
-            val videos = getMediaItems(context, ::getVideoCursor, ::getMediaGrabVideo)
+            val videos =
+                getMediaItems(context, cursorProvider ?: (::getVideoCursor), ::getMediaGrabVideo)
             return PixMedPickerResult(
                 size = videos.size,
                 offset = 0,
@@ -161,6 +176,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      * */
     override fun getVideos(
         context: Context,
+        cursorProvider: ((Context) -> Cursor?)?,
         offset: Int,
         size: Int,
     ): PixMedPickerResult {
@@ -186,7 +202,13 @@ class PixMed : BasePixMed(), PixMedRepository {
                     }
                 }
             }
-            return getMediaItems(context, offset, size, ::getVideoCursor, ::getMediaGrabVideo)
+            return getMediaItems(
+                context,
+                offset,
+                size,
+                cursorProvider ?: (::getVideoCursor),
+                ::getMediaGrabVideo
+            )
         } catch (t: Throwable) {
             Log.e(this::class.java.simpleName, "PixMedia-LOG %%% failed get videos", t)
             if (t is PixMedException) {
@@ -293,7 +315,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      *
      * */
     override fun getPhotoAlbums(context: Context): List<PixMedBucket> {
-        val photoResult: PixMedPickerResult = getPhotos(context)
+        val photoResult: PixMedPickerResult = getPhotos(context, cursorProvider = null)
         val photoItems: List<PixMedItem> = photoResult.items ?: listOf()
         return mapperAlbums(context) { photoItems }
     }
@@ -303,7 +325,7 @@ class PixMed : BasePixMed(), PixMedRepository {
      *
      * */
     override fun getVideoAlbums(context: Context): List<PixMedBucket> {
-        val videoResult: PixMedPickerResult = getVideos(context)
+        val videoResult: PixMedPickerResult = getVideos(context, cursorProvider = null)
         val videoItems: List<PixMedItem> = videoResult.items ?: listOf()
         return mapperAlbums(context) { videoItems }
     }
