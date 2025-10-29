@@ -46,11 +46,11 @@ mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
 
-    coordinates("com.fadlurahmanfdev", "pixmed", "0.0.1")
+    coordinates("com.fadlurahmanfdev", "pixmed", "0.1.0")
 
     pom {
         name.set("Pixmed")
-        description.set("Library to simplify media picker")
+        description.set("Picker Media library to pick media(photos, videos, etc)")
         inceptionYear.set("2025")
         url.set("https://github.com/fadlurahmanfdev/kotlin_feature_media/")
         licenses {
